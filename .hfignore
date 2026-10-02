@@ -1,0 +1,11 @@
+domain_datasets/**
+yolo_format/**
+exdark_eval/**
+exdark_eval_train/**
+ExDark/**
+Groundtruth/**
+LOL/**
+runs/**
+__pycache__/**
+.ipynb_checkpoints/**
+.DS_Store

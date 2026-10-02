@@ -1,0 +1,77 @@
+# ============================================================
+# DGFF GitHub repository
+# ============================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# ============================================================
+# DATASETS — hosted on Hugging Face
+# ============================================================
+Dataset/
+ExDark/
+Groundtruth/
+LOL/
+SPIC/
+yolo_format/
+domain_datasets/
+exdark_eval/
+exdark_eval_train/
+
+# ============================================================
+# TRAINING / EXPERIMENT OUTPUTS
+# ============================================================
+checkpoints/
+checkpoints_ablation/
+runs/
+tmp_eval/
+detectors/
+
+# ============================================================
+# MODEL WEIGHTS — hosted separately
+# ============================================================
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# Numerical experiment artifacts
+*.npz
+
+# ============================================================
+# GENERATED OUTPUTS
+# ============================================================
+*_results.png
+*_results_final.png
+exdark_browse.png
+exdark_detection_final.png
+exdark_detection_results.png
+exdark_qualitative.png
+gate_maps.png
+dgff_results.png
+dgff_v2_results.png
+dgff_v2_results_final.png
+qualitative_comparison.png
+training_curves.png
+val_candidates.png
+val_batch*.jpg
+lol_sample.png
+
+# Generated PDFs
+confusion_matrix_normalized.pdf
+qualitative_comparison.pdf
+
+# Logs
+*.log
+ablation_full200_log.txt
+ablation_log.txt
+DGFF_full_with_outputs.ipynb
+Untitled.ipynb
