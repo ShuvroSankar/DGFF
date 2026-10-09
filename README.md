@@ -8,10 +8,14 @@ Official code for **"End-to-End Task-Oriented Low-Light Image Enhancement via De
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![PyTorch](https://img.shields.io/badge/PyTorch-MPS%20%7C%20CPU%20%7C%20CUDA-ee4c2c)
 ![Venue](https://img.shields.io/badge/ICCA-2026-green)
+[![Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-abbaab%2FDGFF-yellow)](https://huggingface.co/abbaab/DGFF)
+[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-abbaab%2FDGFF--dataset-yellow)](https://huggingface.co/datasets/abbaab/DGFF-dataset)
 
 <p align="center">
   <img src="Exdark.gif" alt="ExDark detection results: raw vs LLEN vs DGFF" width="720">
 </p>
+
+**Quick links:** [Model weights (Hugging Face)](https://huggingface.co/abbaab/DGFF) | [Dataset (Hugging Face)](https://huggingface.co/datasets/abbaab/DGFF-dataset) | [Paper figures](Figures/)
 
 ---
 
@@ -101,6 +105,38 @@ DGFF improves over the unenhanced baseline by 6.6 points and over LLEN-only by 0
   <img src="confusion_matrix_normalized.png" alt="Normalised confusion matrix for the DGFF-enhanced ExDark pipeline" width="520">
 </p>
 
+## Paper figures
+
+All figures from the paper are in [`Figures/`](Figures/).
+
+| Paper figure | File | Description |
+|---|---|---|
+| Fig. 1 | [`framework_diagram.pdf`](Figures/framework_diagram.pdf) | End-to-end DGFF framework (Phases 1-3) |
+| Fig. 2 | [`dgff_v2_results_final.png`](Figures/dgff_v2_results_final.png) | Qualitative enhancement on LOL: low-light input, DGFF output, ground truth |
+| Fig. 3 | [`exdark_detection_final.png`](Figures/exdark_detection_final.png) | ExDark detections: raw (GT boxes), LLEN-only, DGFF |
+| Fig. 4 | [`gate_maps.png`](Figures/gate_maps.png) | Gate activation maps at P3 (fine detail), P4 (edges), P5 (semantics) |
+| Fig. 5 | [`confusion_matrix_normalized.pdf`](Figures/confusion_matrix_normalized.pdf) | Normalised confusion matrix, DGFF-enhanced ExDark pipeline |
+
+### Qualitative enhancement (LOL)
+
+<p align="center">
+  <img src="Figures/dgff_v2_results_final.png" alt="Qualitative enhancement on LOL: input, DGFF, ground truth" width="560">
+</p>
+
+### Detection on ExDark: raw vs LLEN-only vs DGFF
+
+<p align="center">
+  <img src="Figures/exdark_detection_final.png" alt="ExDark detections for raw, LLEN-only and DGFF pipelines" width="560">
+</p>
+
+### Learned gate activations
+
+The gates respond differently across scenes despite identical weights, which indicates input-dependent routing rather than a fixed transformation: P3 follows high-frequency edges, P4 coarser object boundaries, and P5 smooth region-level semantics.
+
+<p align="center">
+  <img src="Figures/gate_maps.png" alt="DGFF gate activation maps at P3, P4 and P5" width="720">
+</p>
+
 ## Repository layout
 
 | Path | Description |
@@ -117,7 +153,8 @@ DGFF improves over the unenhanced baseline by 6.6 points and over LLEN-only by 0
 | `validate_checkpoints.py` | Checkpoint sanity checks |
 | `mps_probe.py` | Apple MPS backend probe |
 | `additional_revew_test.ipynb` | Additional review-stage experiments |
-| `Exdark.gif`, `confusion_matrix_normalized.png` | Figures used in this README |
+| `Figures/` | Figures used in the paper (framework diagram, qualitative results, detections, gate maps, confusion matrix) |
+| `Exdark.gif`, `confusion_matrix_normalized.png` | Images shown in this README |
 
 <!-- TODO: confirm which script/notebook is the canonical entry point (dgff_v3.py?) and mark the older versions as legacy. -->
 
@@ -136,7 +173,19 @@ pip install torch torchvision ultralytics numpy pillow scipy matplotlib tqdm
 
 The paper's experiments ran on an Apple M4 Mac Mini (16 GB), using the MPS backend for Phase 1 and CPU for YOLOv8 fine-tuning/evaluation. Phase 1 took about 7.6 hours and Phase 2 about 19 hours on that setup. CUDA GPUs should be considerably faster.
 
-### 2. Data
+### 2. Pretrained weights
+
+Model weights are hosted on Hugging Face: **[abbaab/DGFF](https://huggingface.co/abbaab/DGFF)**.
+
+```bash
+huggingface-cli download abbaab/DGFF --local-dir ./weights
+```
+
+<!-- TODO: list the checkpoint files in the model repo (e.g. LLEN best checkpoint from LOL epoch 185, adapter weights from ExDark fine-tuning) and how to load them. -->
+
+At inference only LLEN is needed (the adapters are discarded): enhance the image, then run any detector.
+
+### 3. Data
 
 Datasets are available on Hugging Face: **[abbaab/DGFF-dataset](https://huggingface.co/datasets/abbaab/DGFF-dataset)** (see its dataset card for layout and licensing).
 
@@ -150,7 +199,7 @@ huggingface-cli download abbaab/DGFF-dataset --repo-type dataset --local-dir ./d
 
 The dataset repository is large (about 5.7 GB). Hugging Face may ask you to log in first.
 
-### 3. Run
+### 4. Run
 
 ```bash
 # Phase 1: LOL enhancement training (LLEN + adapters, 200 epochs)
